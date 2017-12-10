@@ -1,4 +1,0 @@
-{
-  "dbUri": "mongodb://localhost/BuzzerApp",
-  "jwtSecret": "a secret phrase!!"
-}
