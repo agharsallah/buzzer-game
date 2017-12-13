@@ -11,7 +11,6 @@ var compiler = webpack(config);
 var mode = process.env.NODE_ENV;
 var firebase = require("firebase");
 
-const routes= require ('./server/routes/');
 const cors= require ('cors');
 //connect to the database
 firebase.initializeApp(conf.firebaseConf);
@@ -36,8 +35,11 @@ if(mode === 'production') {
 	    path: '/__webpack_hmr',
 	    heartbeat: 2000
 	}));
+    const questionRouter = express.Router();
+    require('./server/routes/question')(questionRouter);
+    app.use('/api', questionRouter);
     
-	app.get('/', function (req, res, next) {
+	app.get('*', function (req, res, next) {
 	    var filename = path.join(compiler.outputPath, 'index.html');
 	    compiler.outputFileSystem.readFile(filename, function(err, result) {
 	        if(err) {
@@ -48,9 +50,8 @@ if(mode === 'production') {
 	        res.end();
 	    });
     });
-    const questionRouter = express.Router();
-    require('./server/routes/question')(questionRouter);
-    app.use('/api', questionRouter);
+
+
     
     
 }
