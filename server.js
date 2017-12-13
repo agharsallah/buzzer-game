@@ -10,6 +10,7 @@ var io = require('socket.io')(server);
 var compiler = webpack(config);
 var mode = process.env.NODE_ENV;
 var bodyParser  = require('body-parser');
+var controller = require ('./server/controller/question')
 
 //var firebase = require("firebase");
 
@@ -77,8 +78,19 @@ io.on('connection', function(socket) {
             socket.emit('uid', socketID);
             socket.broadcast.emit('enterUser', userList[socketID].username);
             io.emit("updateUserList", userList);
-            if (Object.keys(userList).length ==2)
-                io.emit("GameStarts", 'GameStarts');            
+            if (Object.keys(userList).length ==2){
+
+                io.emit("GameStarts", 'GameStarts'); 
+                //get the questionList from the db and send them to clients
+               // var a = controller.questionListSocket();
+                //console.log(controller.questionListSocket);
+              // console.log(controller.questionListSocket()); 
+                //console.log('aaaaaaaaaaa',  }));
+                controller.sayHelloInEnglish().then(token => {io.emit("questionList",token.val()) })
+                
+            
+            }
+                           
             }else{
                 socket.emit('full', 'full');        
             }

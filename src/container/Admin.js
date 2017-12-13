@@ -9,8 +9,6 @@ import { connect } from "react-redux";
 import { refreshform } from "../actions/actionCreators";
 import { bindActionCreators } from "redux";
 
-
-
 class Admin extends Component {
     constructor(props){
       super(props);
@@ -79,7 +77,7 @@ class Admin extends Component {
             Admin can Add a question to the database :  we have a fixed number of 'indice' and an answer </p>
             <h1>Add a Question to the dataBase</h1>
             <AddQuestion  onSubmit={this.addQuestion.bind(this)}/>
-            <ToastContainer autoClose={3000} type='success' />
+            <ToastContainer autoClose={2500} type='success' />
             
             </div>
         )
