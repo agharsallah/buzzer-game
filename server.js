@@ -1,5 +1,5 @@
 var path = require('path');
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3030;
 var express = require('express');
 var app = express();
 var webpack = require('webpack');
@@ -9,12 +9,18 @@ var server =require('http').createServer(app);
 var io = require('socket.io')(server);
 var compiler = webpack(config);
 var mode = process.env.NODE_ENV;
-var firebase = require("firebase");
+var bodyParser  = require('body-parser');
+
+//var firebase = require("firebase");
+
+var router = require('./server/router'); // get our config file
 
 const cors= require ('cors');
+app.use(bodyParser.urlencoded({ extended: true,limit: '100mb',parameterLimit: 1000000 }));
+app.use(bodyParser.json({limit: '100mb'}));
 //connect to the database
-firebase.initializeApp(conf.firebaseConf);
-var database = firebase.database();
+/* firebase.initializeApp(conf.firebaseConf);
+var database = firebase.database(); */
 
 
 
@@ -34,11 +40,18 @@ if(mode === 'production') {
 	app.use(require('webpack-hot-middleware')(compiler, {
 	    path: '/__webpack_hmr',
 	    heartbeat: 2000
-	}));
-    const questionRouter = express.Router();
-    require('./server/routes/question')(questionRouter);
-    app.use('/api', questionRouter);
+    }));
     
+    /* Api Routes Config */
+    var apiRoutes = express.Router(); 
+
+    router.default(app,apiRoutes);    
+    
+    //const questionRouter = express.Router();
+    //require('./server/routes/question')(questionRouter);
+    //app.use('/api', questionRouter);
+
+
 	app.get('*', function (req, res, next) {
 	    var filename = path.join(compiler.outputPath, 'index.html');
 	    compiler.outputFileSystem.readFile(filename, function(err, result) {
@@ -50,9 +63,6 @@ if(mode === 'production') {
 	        res.end();
 	    });
     });
-
-
-    
     
 }
 
