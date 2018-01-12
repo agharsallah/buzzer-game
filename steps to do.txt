@@ -1,0 +1,21 @@
+
+come to the play room so 
+    the 2 min time starts + send first indice 
+    the new 2 min time starts + send second indice 
+    the new 2 min time starts + send 3rd indice 
+    -------------------------------
+    Now you need to take care of the priority of the buzzer
+    if user clicks on the buzzer then :
+            +a new timer will start for all 
+            +the question timers will Stop for all 
+            the app will excpect an answer from the user -->{
+                if answer is true 
+                if answer is false
+            }
+            block the button for the other user
+            User answers
+            score changes
+            the question timers will restart and we move on to the next question 
+            --------------------
+The time should be managed globally so if the time is gone stop then it's stopped for all the users
+            

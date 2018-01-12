@@ -61,14 +61,12 @@ exports.sayHelloInEnglish = function() {
     //var questionList = Object.keys(snapshot).map(function (key) { return snapshot[key]; });
     //questionList = shuffleArray(questionList);
     //console.log("snapshot",snapshot.val());
+    //I've tried to return the res here but no chance cause of the asynchronous behaviour
     var res = snapshot.val()
    
   })
 };
-
-  
-  
-      
+        
 
 /* suffle array */
 function shuffleArray(array) {

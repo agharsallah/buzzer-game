@@ -16,7 +16,7 @@ class App extends Component {
         const renderDom = this.props.username ? <ChatRoom { ...this.props } /> : <LoginForm { ...this.props } />
         return (
             <MuiThemeProvider>
-                { renderDom }
+                {renderDom}
             </MuiThemeProvider>
         )
     }

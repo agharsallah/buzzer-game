@@ -13,10 +13,10 @@ export default class ChatInput extends Component {
                 content: message,
                 time: this.getTime()
             }
-
+            console.log(messageObj);
             this.props.socket.emit('updateMessages', messageObj)
-            this.refs.msgField.input.value = ''
-            this.props.actions.setErrorInfo('')
+            //this.refs.msgField.input.value = ''
+            //this.props.actions.setErrorInfo('')
         }else {
             this.props.actions.setErrorInfo('You don\'t input any messages.')
         }
@@ -24,6 +24,7 @@ export default class ChatInput extends Component {
 
     handleKeyPress(e) {
         if(e.key === 'Enter') {
+            console.log('enter clicked');
             this.handleMessages()
         }
     }
