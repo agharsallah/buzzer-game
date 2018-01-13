@@ -1,22 +1,21 @@
-A chat room using React + Redux + Socket.io + Material-UI
+A buzzer game using React + Redux + Socket.io + Material-UI + firebase
 
-[DEMO](https://chat-room-react.herokuapp.com/)
 
-![image](https://github.com/Alvin-Tsai/Chat-Room/blob/master/img/chatroom.gif)
+![image](https://github.com/hunter-x/buzzer-game/blob/master/Game.gif)
 
-Features:
-1. Show online users
-2. Change message box color
-3. Leave chat room/Clear messages
+- Installation
+1. install modules : npm install
+2. start server : node server.js
+5. add question/ change params in the admin : localhost:3030/admin
+4. open a game room : localhost:3030
 
-Support browsers: IE 11+/Chrome/FireFox
+- description:
+Time driven Game where user have to click on the button to be able to answer questions 
 
-Please replace npm with yarn as a package manager: `npm install yarn -g`
-
-Install chat room: `yarn install`
-
-Development mode: `yarn start`
-
-Production mode: `yarn build`
-
-Test building files: `yarn build-test`
+- To do :
+* Fix some bugs in the socket flow
+* add rooms to the game
+* add language support 
+* change design of the admin
+* add credential to admin part
+...
