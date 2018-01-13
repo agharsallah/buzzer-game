@@ -5,6 +5,16 @@ import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
 
 export default class UserList extends Component {
+    
+    componentWillMount() {
+        this.props.socket.on('updateScore', (score) => {
+            this.setState({score});
+        })
+    }
+    constructor(props){
+      super(props);
+      this.state={score:'0'}
+    }
     render() {
         const userlistElement = []
         const userlist = this.props.userlist
@@ -15,16 +25,16 @@ export default class UserList extends Component {
             const listbkColor = '#99BBFF'
             const avatarbkColor ='#CCDDFF'
 
-            userlistElement.push(<ListItem style={{ backgroundColor: listbkColor }}  key={ uid } leftAvatar={ <Avatar backgroundColor={ avatarbkColor }> { username[0] } </Avatar> }  primaryText={ username } />)
+            userlistElement.push(<ListItem style={{ backgroundColor: listbkColor }}  key={ uid } leftAvatar={ <Avatar backgroundColor={ avatarbkColor }> { username[0] } </Avatar> }  primaryText={ 'User :'+username }  />)
         }
 
         return(
             <div>
                 <Subheader>
-                    { `Online Users: ${usernums}` }
+                    { `Online Users: ${usernums}`  }
                 </Subheader>
                 <List>
-                    { userlistElement }
+                    { userlistElement  }
                 </List>
             </div>
         )

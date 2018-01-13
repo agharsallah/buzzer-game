@@ -11,6 +11,7 @@ firebase.auth().signInAnonymously().catch(function(error) {
   // ...
   console.log(errorCode,'---',errorMessage)
 });
+//adding Question
 exports.addQuestion= function addQuestion(req, res, next) {
   //console.log(req.body);
   var actualQuestionNumber=parseInt(req.body.number) + 1
@@ -22,8 +23,24 @@ exports.addQuestion= function addQuestion(req, res, next) {
       res.json('added to db');
     }
   })
-
 };
+
+//adding Params
+exports.addParam= function addParam(req, res, next) {
+  console.log(req.body);
+  console.log(req.body.gameParams);
+  var Time=parseInt(req.body.Time) 
+  var Player_number=parseInt(req.body.Player_number) 
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {  
+      database.ref('param/').set(
+        req.body.gameParams
+      );
+      res.json('added to db');
+    }
+  })
+};
+
 
 //get the number of existing questions
 exports.questionNumber= function questionNumber(req, res, next) {
@@ -39,6 +56,8 @@ exports.questionNumber= function questionNumber(req, res, next) {
   })
 
 };
+
+
 
 //get the list of the questions
 exports.questionList= function questionList(req, res, next) {  

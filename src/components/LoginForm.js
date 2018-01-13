@@ -36,7 +36,7 @@ export default class LoginForm extends Component {
         return (
             <div className="login-container">
                 <div className="login-form">
-                    <AppBar showMenuIconButton={ false } title="Chat Room" />
+                    <AppBar showMenuIconButton={ false } title="Game Room" />
                     <div className="login-form-field">
                         <TextField hintText="Input your name" errorText={ this.props.errorinfo } ref="usernameField" onKeyPress={ this.handleKeyPress.bind(this) } />
                         {/* <RadioButtonGroup name="sex" defaultSelected="boy" ref="sexField" style={{ 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center' }} >

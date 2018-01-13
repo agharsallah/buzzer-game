@@ -6,13 +6,16 @@ import Messages from '../components/Messages';
 import MessageInput from '../components/MessageInput';
 import UserList from '../components/UserList';
 import ReactCountdownClock from 'react-countdown-clock';
-
+import './roomStyle.css'
 import axios from 'axios';
 
 export default class ChatRoom extends Component {
     constructor(props) {
         super(props);
-        this.state = { table: 'ready', questionList: [], pauseQuestion: false, answermode: false, noAnswer: false, secondsElapsed: 0, questionNum: 0, indiceNum: 1, answer: '',score:0 }
+        this.state = {
+            table: 'ready', questionList: [], pauseQuestion: false, answermode: false, noAnswer: false, secondsElapsed: 0, questionNum: 0, indiceNum: 1, answer: '', score: 0,
+            buzzer_body: 'body', buzzer_top: '', buzzer_bottom: ''
+        }
     }
     /* random array */
     tick() {
@@ -21,7 +24,7 @@ export default class ChatRoom extends Component {
     componentWillMount() {
         //we will get the list of the questions here  then when we have the table ready 
         //we announce 3 Rounds - Round 1 - we show the Question , and a 2 min timer starts 
-        /* let url = 'http://localhost:3030/api/question-list';   
+        /* let url = 'http://localhost:1515/api/question-list';   
         let self = this; 
         axios({
           method: 'get',
@@ -105,7 +108,7 @@ export default class ChatRoom extends Component {
     handleBuzzerClick() {
         console.log('buzzerClicked');
         //we start a new timer
-        this.setState({ secondsElapsed: 0, answermode: true });
+        this.setState({ secondsElapsed: 0, answermode: true, buzzer_body: 'body body-click', buzzer_top: 'top-click', buzzer_bottom: 'bottom-click' });
     }
     //no answer is to block the user when he 's not the one who clicked the buzzer
     handleNoAnswer(Bool) {
@@ -119,11 +122,21 @@ export default class ChatRoom extends Component {
         //console.log('dd');
         this.setState({ secondsElapsed: 0, questionNum, indiceNum });
     }
-    handleCorrectAnswer(){
-        this.setState({answermode:false});
+    handleCorrectAnswer() {
+        this.setState({ answermode: false });
     }
-    handleScore(score){
-        this.setState({score:score});
+    handleScore(score) {
+        this.setState({ score: score });
+    }
+    changeButtonStyle() {
+        this.setState({
+            buzzer_body: 'body body-click', buzzer_top: 'top-click', buzzer_bottom: 'bottom-click'
+        });
+    }
+    resetButton() {
+        this.setState({
+            buzzer_body: 'body ', buzzer_top: '', buzzer_bottom: ''
+        });
     }
     render() {
         this.props.socket.on('buzzerClicked', () => {
@@ -133,7 +146,7 @@ export default class ChatRoom extends Component {
         this.props.socket.on('noAnswer', () => {
             this.handleNoAnswer(true)
         })
-        
+
         //updating score
         this.props.socket.on('updateScore', (score) => {
             console.log(score);
@@ -143,15 +156,16 @@ export default class ChatRoom extends Component {
         //handling a correct answer
         this.props.socket.on('correctAnswer', (questionNum) => {
             //moving to the next qustion 
-            this.restCounter(questionNum,1)
-            
+            this.restCounter(questionNum, 1)
+            //buzzer back to clickable
+            this.resetButton();
             //go back to question mode
             this.handleCorrectAnswer()
             //hiding the input answer for the one who had it on 
-            if (this.state.noAnswer==true) {
+            if (this.state.noAnswer == true) {
                 this.handleNoAnswer(false)
             }
-            
+
         })
 
         var usernums = Object.keys(this.props.userlist).length
@@ -159,84 +173,87 @@ export default class ChatRoom extends Component {
         //question=this.state.questionList
         var indice = 'indice' + [this.state.indiceNum]
         //console.log('shhhhhhhhhhhh', (this.state.questionList) );
-        console.log('indice',indice);
-        console.log('questionNum',this.state.questionNum);
-        console.log('questionList',this.state.questionList);
+        //console.log('indice', indice);
+        //console.log('questionNum', this.state.questionNum);
+        //console.log('questionList', this.state.questionList);
         if (this.state.questionList.length != 0) {
             //if we have a next question we shoot it
             var question = (this.state.questionList[this.state.questionNum])[indice];
+            //show the theme
+            var theme = (this.state.questionList[this.state.questionNum]).Question;
+            console.log('-------------------------------', theme);
             //else we compare score & show the winner
         }
         //answermode will be true if the user clicks on the buzzer so we get to this block to loop through questions
 
         // every x seconds the questions change 
-        if (this.state.secondsElapsed == 30 && this.state.questionList && this.state.answermode == false) {
+        if (this.state.secondsElapsed == 15 && this.state.questionList && this.state.answermode == false) {
             //change question and start the counter
             var indiceNum = this.state.indiceNum + 1;
             var questionNum = this.state.questionNum;
             if (this.state.indiceNum == 3) { var questionNum = this.state.questionNum + 1; var indiceNum = 0; }
             this.restCounter(questionNum, indiceNum)
         };
-        
+
         //we get to this block when user clicked buzzer so that we the question answering timer will start
-        if (this.state.answermode == true ) {
-            if (this.state.secondsElapsed < 30) {
-            //console.log('go back to question mode after updating score ...');
-            question = 'user + the one who clicks buzzer is answering ...'
-                
-            }else{
-                question = 'No Answer Move to the next indice and block the user'
+        if (this.state.answermode == true) {
+            if (this.state.secondsElapsed < 15) {
+                //console.log('go back to question mode after updating score ...');
+                question = 'user  test is answering ...'
+
+            } else {
+                question = 'No Answer '
+                //block the user & continue indication for other users
+                //
             }
         }
         //console.log('noAnswer',this.state.noAnswer);
         return (
             <div>
-                {this.state.table == 'full' ? <div>full</div> : <div>
-                    <div className="chatroom-container">
-                        <div className="chatroom-left-block">
-                            <div className="chatroom-userlist">
-                                <UserList userlist={this.props.userlist} />
+                {this.state.table == 'full' ? <div>full</div> :
+                    <div className='container'>
+                        <div className='row'>
+                            <div className='col-md-3 listuser' >
+                                <UserList userlist={this.props.userlist} score={this.state.score} { ...this.props } />
                             </div>
-                        </div>
-                        <div className="chatroom-right-block">
-                            <div className="chatroom-otherfn">
-                                <RaisedButton className="chatroom-otherfn-leave" label="Leave Room" primary={true} onClick={this.handleLeaveChatRoom.bind(this)} />
-                                <RaisedButton className="chatroom-otherfn-clear" label="Clear" primary={true} onClick={this.handleClearMessages.bind(this)} />
-                            </div>
-                            <div className="chatroom-messages">
-                                <div>
-                                    {this.state.questionList.map(function (object, i) {
-                                        //console.log(object.indice1);
-                                    })}
-                                    {this.state.secondsElapsed}
-                                    {this.state.table == 'GameStarts' ?
+
+                            <div className='col-md-9' style={{ marginTop: '1%' }}>
+                                <div className='row '>
+                                    <div className="well col-md-11 offset-1 "><h1 className='game-Title'>Question : {theme}</h1></div>
+                                    <div className='row col-md-11 offset-1'>
+                                        <div className='col-md-5 offset-1  well'> <h1 className='game-Title'>Time : {this.state.secondsElapsed}</h1> </div>
+                                        <div className='col-md-5 offset-1  well'> <h1 className='game-Title'>Score : {this.state.score}</h1> </div>
+                                    </div>
+                                    <div className='col-md-11 offset-1  well'> <h1 className='game-Title'>Indication :{this.state.table == 'GameStarts' ?
                                         //if we have players show question and start counter 
                                         //for the first question in the first round
                                         <p>{question}</p>
-                                        : null}
+                                        : null}</h1> </div>
                                 </div>
-                                <div style={{marginTop:'20px'}} >
-                                Score : {this.state.score}
-                                    
+                                <div className='col-md-12' style={{ marginTop: '10%' }}  >
+                                    <div id="button" onClick={this.handleAnswer.bind(this)}>
+                                        <div id="top" className={this.state.buzzer_top}></div>
+                                        <div id="bottom" className={this.state.buzzer_bottom} ></div>
+                                        <div id="body" className={this.state.buzzer_body}></div>
+                                        <div id="floor"></div>
+                                    </div>
                                 </div>
+                                <div>
+                                    <div className="chatroom-right-block" style={{ marginTop: '5%' }} >
+                                        {(this.state.answermode == true && this.state.noAnswer == false) ?
+                                            <div className="chatroom-message-input">
+
+                                                <MessageInput { ...this.props } />
+                                            </div> : null}
+                                    </div>
+                                </div>
+
+
                             </div>
-
-                            <RaisedButton className="chatroom-otherfn-leave" label="Answer" primary={true} onClick={this.handleAnswer.bind(this)} />
-
                         </div>
                     </div>
-                    <div className="chatroom-footer">
-
-                        <div className="chatroom-right-block">
-                            {(this.state.answermode == true && this.state.noAnswer == false) ?
-                                <div className="chatroom-message-input">
-                                    <MessageInput { ...this.props } />
-                                </div> : null}
-                        </div>
-                    </div>
-                </div>}
+                }
             </div>
-
         )
     }
 }

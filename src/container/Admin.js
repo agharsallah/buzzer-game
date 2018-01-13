@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AddQuestion from '../components/admin/AddQuestion'
+import ChangeParam from '../components/admin/ChangeParam'
 import axios from 'axios' ;
 //var conf = require('../../configs/conf.js');
 import { ToastContainer, toast } from 'react-toastify';
@@ -67,18 +68,43 @@ class Admin extends Component {
         });
         
     }
+    changeParam(data){
+      console.log(data)
+      //when we get the object of the question we send it to the database through an Api
+      let url = 'http://localhost:3030/api/addParam';    
+      const self = this
+      axios({
+        method: 'post',
+        url: url,
+        data: {
+          gameParams: data,
+        }
+      })
+      .then(function (response) {
+          console.log("response");
+          //should refresh the page here and inform the user that the question is added and get the number of the question updated again
+          self.notify()
+          self.props.refreshform()
+                
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      
+  }
     render() {
 
         return (
             <div>   
-            <h1>    Admin dashboard</h1>
+            <h3>    Admin dashboard</h3>
             <p>the admin will define the messages that will be showed to the users, he will also define the params such as the time between the question and answer ...</p>
             <p>So we will start by defining 5 indications and an answer - admin can see the list of existing questions (read from DB)- 
             Admin can Add a question to the database :  we have a fixed number of 'indice' and an answer </p>
-            <h1>Add a Question to the dataBase</h1>
+            <h4>Add a Question to the dataBase</h4>
             <AddQuestion  onSubmit={this.addQuestion.bind(this)}/>
             <ToastContainer autoClose={2500} type='success' />
-            
+            <h4 style={{marginTop:'10px'}}>Change Params</h4>
+            <ChangeParam onSubmit={this.changeParam.bind(this)}/>
             </div>
         )
     }

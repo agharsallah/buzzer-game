@@ -103,6 +103,7 @@ io.on('connection', function (socket) {
 
                 //if we get a Buzzer click from a user we treat it here 
                 socket.on('answerTry', function (data) {
+                    console.log('server butt clicked');
                     //console.log('data.questionNumber : ', data.questionNumber);
                     io.emit('buzzerClicked', "this is sent for the users to start a new counter -duration of answer ");
                     socket.broadcast.emit('noAnswer', "this is sent for the one who didn't clicked so he won't get the answer input in his view");
@@ -111,7 +112,10 @@ io.on('connection', function (socket) {
                     let answer = questionList[data.questionNumber].answer
 
                     // get the info of the user who answers the question : id of the user | false or wrong
-                    socket.on('updateMessages', function (info) {   
+                    socket.on('updateMessages', function (info) {  
+                        console.log('dddddddddddddddddddddddddddddddddddddddd'); 
+                        console.log(info.content);
+                        console.log(answer);
                         if (info.content == answer) {
                             //update the score of the user , 
                             userList[socketID].score= parseInt(userList[socketID].score)+1;
